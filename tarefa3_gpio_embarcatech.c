@@ -93,8 +93,10 @@ int main()
 
             case '4':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
+                sleep_ms(200);  // Atraso para não reagir rapidamente
                 break;
+
 
             case '5':
                 printf("Tecla pressionada: %c\n", key);
