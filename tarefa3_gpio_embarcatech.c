@@ -22,6 +22,7 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 #define BUZZER_FREQUENCY 100
 #define BUZZER_PIN 21
 #define CLK_DIV 4.0f
+#define RGB_MAX 255
 
 // Protótipos das funções.
 void init_matrix_pins();
@@ -33,6 +34,7 @@ void np_write();
 void init_buzzer();
 void play_buzzer(uint freq, uint duration_ms);
 void draw();
+void fill_color(uint8_t r, uint8_t g, uint8_t b, uint32_t duration);
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -132,7 +134,7 @@ int main()
                 break;
 
             case 'C':
-                // Implementar função correspondente
+                fill_color(RGB_MAX * 0.8, 0, 0, 2000);
                 break;
 
             case 'D':
@@ -294,6 +296,17 @@ void np_write()
         pio_sm_put_blocking(np_pio, sm, leds[i].B);
     }
     sleep_us(100); // Espera 100us, sinal de RESET do datasheet.
+}
+
+// Preenche a matriz de LEDs com uma cor RGB por um tempo determinado.
+void fill_color(uint8_t r, uint8_t g, uint8_t b, uint32_t duration) {
+    for (uint i = 0; i < LED_COUNT; ++i)
+    {
+        np_set_led(i, r, g, b);
+    }
+
+    np_write();
+    sleep_ms(duration);
 }
 
 void draw()
