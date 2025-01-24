@@ -357,35 +357,183 @@ void draw()
     }
 }
 
-    void draw_V() 
+void draw_V() 
 {
     np_clear();  // Limpa a matriz antes de acender os LEDs
 
-    // Acende todos os LEDs em azul (todos os LEDs da matriz 5x5)
-    for (int i = 0; i < 25; i++) {
-        np_set_led(i, 0, 0, 255);  // Todos os LEDs em azul (RGB: 0, 0, 255)
+    // Acende os LEDs em azul, de cima para baixo
+    for (int i = 0; i < 5; i++) { // Linha 1
+        np_set_led(i, 0, 0, 255);  // Acende o LED em azul
+        np_write();  // Envia os dados para o display
+        sleep_ms(100);  // Aguarda 100 ms antes de acender o próximo LED
     }
 
-    np_write();  // Envia os dados para o display
-    sleep_ms(2000);  // Aguarda 5 segundos com todos os LEDs acesos em azul (5000 ms)
+    for (int i = 5; i < 10; i++) { // Linha 2
+        np_set_led(i, 0, 0, 255);  // Acende o LED em azul
+        np_write();  // Envia os dados para o display
+        sleep_ms(100);
+    }
 
-    // Agora muda para verde e amarelo
+    for (int i = 10; i < 15; i++) { // Linha 3
+        np_set_led(i, 0, 0, 255);  // Acende o LED em azul
+        np_write();  // Envia os dados para o display
+        sleep_ms(100);
+    }
+
+    for (int i = 15; i < 20; i++) { // Linha 4
+        np_set_led(i, 0, 0, 255);  // Acende o LED em azul
+        np_write();  // Envia os dados para o display
+        sleep_ms(100);
+    }
+
+    for (int i = 20; i < 25; i++) { // Linha 5
+        np_set_led(i, 0, 0, 255);  // Acende o LED em azul
+        np_write();  // Envia os dados para o display
+        sleep_ms(100);
+    }
+
+    sleep_ms(3000);  // Aguarda 3 segundos com todos os LEDs acesos em azul (3000 ms)
+
+    // Agora todos os LEDs ficam verdes, de baixo para cima
     np_clear();  // Limpa a matriz antes de mudar a cor
 
-    // Acende a primeira metade dos LEDs em verde (metade superior da matriz)
-    for (int i = 0; i < 13; i++) {  // Primeira metade (13 LEDs)
-        np_set_led(i, 0, 255, 0);  // Acende LEDs em verde (RGB: 0, 255, 0)
+    for (int i = 20; i < 25; i++) { // Linha 5
+        np_set_led(i, 0, 255, 0);  // Acende o LED em verde
+        np_write();
+        sleep_ms(100);
     }
 
-    // Acende a segunda metade dos LEDs em amarelo (metade inferior da matriz)
-    for (int i = 13; i < 25; i++) {  // Segunda metade (12 LEDs restantes)
-        np_set_led(i, 255, 255, 0);  // Acende LEDs em amarelo (RGB: 255, 255, 0)
+    for (int i = 15; i < 20; i++) { // Linha 4
+        np_set_led(i, 0, 255, 0);
+        np_write();
+        sleep_ms(100);
     }
 
-    np_write();  // Envia os dados para o display
-    sleep_ms(3000);  // Aguarda 5 segundos com os LEDs acesos em verde e amarelo (5000 ms)
+    for (int i = 10; i < 15; i++) { // Linha 3
+        np_set_led(i, 0, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 5; i < 10; i++) { // Linha 2
+        np_set_led(i, 0, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 0; i < 5; i++) { // Linha 1
+        np_set_led(i, 0, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    sleep_ms(2000);  // Aguarda 2 segundos com todos os LEDs acesos em verde (2000 ms)
+
+    // Agora todos os LEDs ficam amarelos, de cima para baixo
+    np_clear();
+
+    for (int i = 0; i < 5; i++) {
+        np_set_led(i, 255, 255, 0);  // Acende o LED em amarelo
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 5; i < 10; i++) {
+        np_set_led(i, 255, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 10; i < 15; i++) {
+        np_set_led(i, 255, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 15; i < 20; i++) {
+        np_set_led(i, 255, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 20; i < 25; i++) {
+        np_set_led(i, 255, 255, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    sleep_ms(2000);  // Aguarda 2 segundos com todos os LEDs acesos em amarelo (2000 ms)
+
+    // Agora todos os LEDs ficam brancos, de cima para baixo
+    np_clear();
+
+    for (int i = 0; i < 5; i++) {
+        np_set_led(i, 255, 255, 255);  // Acende o LED em branco
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 5; i < 10; i++) {
+        np_set_led(i, 255, 255, 255);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 10; i < 15; i++) {
+        np_set_led(i, 255, 255, 255);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 15; i < 20; i++) {
+        np_set_led(i, 255, 255, 255);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 20; i < 25; i++) {
+        np_set_led(i, 255, 255, 255);
+        np_write();
+        sleep_ms(100);
+    }
+
+    sleep_ms(2000);  // Aguarda 2 segundos com todos os LEDs acesos em branco (2000 ms)
+
+    // Agora todos os LEDs ficam vermelhos, de baixo para cima
+    np_clear();
+
+    for (int i = 20; i < 25; i++) {
+        np_set_led(i, 255, 0, 0);  // Acende o LED em vermelho
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 15; i < 20; i++) {
+        np_set_led(i, 255, 0, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 10; i < 15; i++) {
+        np_set_led(i, 255, 0, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 5; i < 10; i++) {
+        np_set_led(i, 255, 0, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        np_set_led(i, 255, 0, 0);
+        np_write();
+        sleep_ms(100);
+    }
+
+    sleep_ms(2000);  // Aguarda 2 segundos com todos os LEDs acesos em vermelho (2000 ms)
 }
-
 
 void set_all_leds_white_20()
 {
