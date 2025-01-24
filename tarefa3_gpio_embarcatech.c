@@ -22,6 +22,7 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 #define BUZZER_FREQUENCY 100
 #define BUZZER_PIN 21
 #define CLK_DIV 4.0f
+#define RGB_MAX 255
 
 // Protótipos das funções.
 void init_matrix_pins();
@@ -33,6 +34,8 @@ void np_write();
 void init_buzzer();
 void play_buzzer(uint freq, uint duration_ms);
 void draw();
+void fill_color(uint8_t r, uint8_t g, uint8_t b, uint32_t duration);
+void draw_snake();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -85,7 +88,7 @@ int main()
 
             case '2':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_snake();
                 break;
 
             case '3':
@@ -132,7 +135,7 @@ int main()
                 break;
 
             case 'C':
-                // Implementar função correspondente
+                fill_color(RGB_MAX * 0.8, 0, 0, 2000);
                 break;
 
             case 'D':
@@ -296,6 +299,17 @@ void np_write()
     sleep_us(100); // Espera 100us, sinal de RESET do datasheet.
 }
 
+// Preenche a matriz de LEDs com uma cor RGB por um tempo determinado.
+void fill_color(uint8_t r, uint8_t g, uint8_t b, uint32_t duration) {
+    for (uint i = 0; i < LED_COUNT; ++i)
+    {
+        np_set_led(i, r, g, b);
+    }
+
+    np_write();
+    sleep_ms(duration);
+}
+
 void draw()
 {
     for (uint i = 0; i < LED_COUNT; ++i)
@@ -346,5 +360,23 @@ void draw()
         {
             np_set_led(i, 255, 255, 255); // Magenta.
         }
+    }
+}
+
+void draw_snake() {
+    int len_snake = 3;
+
+    for (int i = 0; i < LED_COUNT; i++) {
+        for (int j = 0; j < len_snake; j++) {
+            if (i - j >= 0) {
+                np_set_led(i - j, 0, 255, 0);
+            }
+        }
+
+        np_write();
+        sleep_ms(200);
+
+        np_clear();
+        np_write();
     }
 }
