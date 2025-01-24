@@ -18,7 +18,7 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 
 // Constantes
 #define LED_COUNT 25
-#define LED_PIN 7
+#define LED_PIN 9
 #define BUZZER_FREQUENCY 100
 #define BUZZER_PIN 21
 #define CLK_DIV 4.0f
@@ -33,11 +33,13 @@ void np_write();
 void init_buzzer();
 void play_buzzer(uint freq, uint duration_ms);
 void draw();
+void draw_V(void); // Protótipo da função draw_V
+void set_all_leds_white_20(void); // Protótipo da função set_all_leds_white_20
 
 // Variáveis globais
-npLED_t leds[LED_COUNT];        // Declaração do buffer de pixels que formam a matriz.
-PIO np_pio;                     // Ponteiro para a máquina PIO.
-uint sm;                        // Número da máquina state machine.
+npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
+PIO np_pio;              // Ponteiro para a máquina PIO.
+uint sm;                 // Número da máquina state machine.
 
 int rows[4] = {8, 7, 6, 5};     // Pinos GPIO do teclado matricial.
 int columns[4] = {4, 3, 2, 28}; // Pinos GPIO do teclado matricial.
@@ -73,6 +75,8 @@ int main()
 
             case '0':
                 printf("Tecla pressionada: %c\n", key);
+                draw();
+                np_write();
                 sleep_ms(200);
                 break;
 
@@ -92,11 +96,12 @@ int main()
                 break;
 
             case '4':
-                printf("Tecla pressionada: %c\n", key);
-                draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
-                sleep_ms(200);  // Atraso para não reagir rapidamente
+                printf("Tecla pressionada:4 %c\n", key);
+                // Função que desenha a letra 'A' na matriz de LEDs
+                draw_V();
+                np_write();
+                sleep_ms(200); // Atraso para não reagir rapidamente
                 break;
-
 
             case '5':
                 printf("Tecla pressionada: %c\n", key);
@@ -139,6 +144,10 @@ int main()
                 break;
 
             case '#':
+            printf("Tecla pressionada: %c\n", key);
+                set_all_leds_white_20();  // Acende todos os LEDs na cor branca com 20% de intensidade
+                np_write();
+                sleep_ms(500);  // Atraso para não reagir rapidamente
                 break;
 
             case '*':
@@ -147,12 +156,10 @@ int main()
 
             default:
                 printf("Tecla não reconhecida ou erro na operação!\n");
-                break;
             }
+            np_clear();
+            np_write();
         }
-        draw();
-        np_write();   // Escreve as cores nos LEDs.
-        sleep_ms(50); // Aguarda 50ms.
     }
 }
 
@@ -347,5 +354,43 @@ void draw()
         {
             np_set_led(i, 255, 255, 255); // Magenta.
         }
+    }
+}
+
+    void draw_V() 
+{
+    np_clear();  // Limpa a matriz antes de acender os LEDs
+
+    // Acende todos os LEDs em azul (todos os LEDs da matriz 5x5)
+    for (int i = 0; i < 25; i++) {
+        np_set_led(i, 0, 0, 255);  // Todos os LEDs em azul (RGB: 0, 0, 255)
+    }
+
+    np_write();  // Envia os dados para o display
+    sleep_ms(2000);  // Aguarda 5 segundos com todos os LEDs acesos em azul (5000 ms)
+
+    // Agora muda para verde e amarelo
+    np_clear();  // Limpa a matriz antes de mudar a cor
+
+    // Acende a primeira metade dos LEDs em verde (metade superior da matriz)
+    for (int i = 0; i < 13; i++) {  // Primeira metade (13 LEDs)
+        np_set_led(i, 0, 255, 0);  // Acende LEDs em verde (RGB: 0, 255, 0)
+    }
+
+    // Acende a segunda metade dos LEDs em amarelo (metade inferior da matriz)
+    for (int i = 13; i < 25; i++) {  // Segunda metade (12 LEDs restantes)
+        np_set_led(i, 255, 255, 0);  // Acende LEDs em amarelo (RGB: 255, 255, 0)
+    }
+
+    np_write();  // Envia os dados para o display
+    sleep_ms(3000);  // Aguarda 5 segundos com os LEDs acesos em verde e amarelo (5000 ms)
+}
+
+
+void set_all_leds_white_20()
+{
+    for (int i = 0; i < LED_COUNT; i++)
+    {
+        np_set_led(i, 51, 51, 51); // 20% de 255 é 51 para cada cor RGB
     }
 }
