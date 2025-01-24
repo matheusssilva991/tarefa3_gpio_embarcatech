@@ -35,6 +35,7 @@ void init_buzzer();
 void play_buzzer(uint freq, uint duration_ms);
 void draw();
 void fill_color(uint8_t r, uint8_t g, uint8_t b, uint32_t duration);
+void draw_snake();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -87,7 +88,7 @@ int main()
 
             case '2':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_snake();
                 break;
 
             case '3':
@@ -359,5 +360,23 @@ void draw()
         {
             np_set_led(i, 255, 255, 255); // Magenta.
         }
+    }
+}
+
+void draw_snake() {
+    int len_snake = 3;
+
+    for (int i = 0; i < LED_COUNT; i++) {
+        for (int j = 0; j < len_snake; j++) {
+            if (i - j >= 0) {
+                np_set_led(i - j, 0, 255, 0);
+            }
+        }
+
+        np_write();
+        sleep_ms(200);
+
+        np_clear();
+        np_write();
     }
 }
