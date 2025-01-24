@@ -18,7 +18,7 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 
 // Constantes
 #define LED_COUNT 25
-#define LED_PIN 7
+#define LED_PIN 9
 #define BUZZER_FREQUENCY 100
 #define BUZZER_PIN 21
 #define CLK_DIV 4.0f
@@ -73,6 +73,7 @@ int main()
 
             case '0':
                 printf("Tecla pressionada: %c\n", key);
+                draw();
                 sleep_ms(200);
                 break;
 
@@ -93,7 +94,7 @@ int main()
 
             case '4':
                 printf("Tecla pressionada: %c\n", key);
-                draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
+                //draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
                 sleep_ms(200);  // Atraso para não reagir rapidamente
                 break;
 
@@ -150,7 +151,6 @@ int main()
                 break;
             }
         }
-        draw();
         np_write();   // Escreve as cores nos LEDs.
         sleep_ms(50); // Aguarda 50ms.
     }
