@@ -35,9 +35,9 @@ void play_buzzer(uint freq, uint duration_ms);
 void draw();
 
 // Variáveis globais
-npLED_t leds[LED_COUNT];        // Declaração do buffer de pixels que formam a matriz.
-PIO np_pio;                     // Ponteiro para a máquina PIO.
-uint sm;                        // Número da máquina state machine.
+npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
+PIO np_pio;              // Ponteiro para a máquina PIO.
+uint sm;                 // Número da máquina state machine.
 
 int rows[4] = {8, 7, 6, 5};     // Pinos GPIO do teclado matricial.
 int columns[4] = {4, 3, 2, 28}; // Pinos GPIO do teclado matricial.
@@ -74,6 +74,7 @@ int main()
             case '0':
                 printf("Tecla pressionada: %c\n", key);
                 draw();
+                np_write();
                 sleep_ms(200);
                 break;
 
@@ -94,10 +95,9 @@ int main()
 
             case '4':
                 printf("Tecla pressionada: %c\n", key);
-                //draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
-                sleep_ms(200);  // Atraso para não reagir rapidamente
+                // draw_v();  // Função que desenha a letra 'V' na matriz de LEDs
+                sleep_ms(200); // Atraso para não reagir rapidamente
                 break;
-
 
             case '5':
                 printf("Tecla pressionada: %c\n", key);
@@ -148,11 +148,10 @@ int main()
 
             default:
                 printf("Tecla não reconhecida ou erro na operação!\n");
-                break;
             }
+            np_clear();
+            np_write();
         }
-        np_write();   // Escreve as cores nos LEDs.
-        sleep_ms(50); // Aguarda 50ms.
     }
 }
 
