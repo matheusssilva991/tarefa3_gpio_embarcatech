@@ -84,7 +84,7 @@ int main()
 
             case '1':
                 printf("Tecla pressionada: %c\n", key);
-                animate_b(); // Executa animação da letra "B".
+                sleep_ms(200);
                 break;
 
             case '2':
