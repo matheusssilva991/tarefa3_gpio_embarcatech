@@ -1,4 +1,0 @@
-[wokwi]
-version = 1
-firmware = 'build/tarefa3_gpio_embarcatech.uf2'
-elf = 'build/tarefa3_gpio_embarcatech.elf'
