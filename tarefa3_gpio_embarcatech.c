@@ -564,46 +564,89 @@ void draw_snake() {
     }
 }
 
-void animate_b()
+void animate_subgrupo3()
 {
-    // Frames da animação para a letra "B".
-    uint8_t frames[5][25] = {
-        // Primeiro frame (apenas a barra vertical esquerda)
-        {255, 0, 0, 0, 0,
-         255, 0, 0, 0, 0,
-         255, 0, 0, 0, 0,
-         255, 0, 0, 0, 0,
-         255, 0, 0, 0, 0},
-
-        // Segundo frame (barra superior e meio adicionados)
-        {255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255,
-         255, 0, 0, 0, 0,
-         255, 0, 0, 0, 0},
-
-        // Terceiro frame (completa a barra inferior)
-        {255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255},
-
-        // Quarto frame (acende tudo para um efeito visual)
+    // Frames da animação para a palavra "SUBGRUPO3".
+    uint8_t frames[11][25] = {
+        // Frame 1: Todos os LEDs acesos
         {255, 255, 255, 255, 255,
          255, 255, 255, 255, 255,
          255, 255, 255, 255, 255,
          255, 255, 255, 255, 255,
          255, 255, 255, 255, 255},
 
-        // Quinto frame (desliga tudo para finalizar)
+        // Frame 2: Letra "S"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 3: Letra "U"
+        {255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 4: Letra "B"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 5: Letra "G"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 0, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 6: Letra "R"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 255, 0, 255,
+         255, 0, 0, 255, 255},
+
+        // Frame 7: Letra "U"
+        {255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 8: Letra "P"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0},
+
+        // Frame 9: Letra "O"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 10: Número "3"
+        {255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 11: Todos os LEDs apagados
         {0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
          0, 0, 0, 0, 0,
          0, 0, 0, 0, 0,
          0, 0, 0, 0, 0}
     };
 
-    for (int frame = 0; frame < 5; frame++)
+    for (int frame = 0; frame < 11; frame++)
     {
         // Atualiza os LEDs conforme o frame atual.
         for (int i = 0; i < LED_COUNT; i++)
@@ -612,7 +655,7 @@ void animate_b()
         }
 
         np_write(); // Atualiza a matriz de LEDs.
-        sleep_ms(200); // Pausa entre os frames.
+        sleep_ms(500); // Pausa de 500ms entre os frames.
     }
 }
 
