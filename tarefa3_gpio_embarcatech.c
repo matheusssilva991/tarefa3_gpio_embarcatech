@@ -134,7 +134,7 @@ int main()
                 break;
 
             case 'B':
-                // Implementar função correspondente
+                handle_key_b(); // Aciona a funcionalidade da tecla B.
                 break;
 
             case 'C':
