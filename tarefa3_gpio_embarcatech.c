@@ -563,3 +563,70 @@ void draw_snake() {
         np_write();
     }
 }
+
+void animate_b()
+{
+    // Frames da animação para a letra "B".
+    uint8_t frames[5][25] = {
+        // Primeiro frame
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Segundo frame (parte intermediária)
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Terceiro frame (parte final do "B")
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Quarto frame (acende tudo para um efeito visual)
+        {255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255},
+
+        // Quinto frame (desliga tudo para finalizar)
+        {0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0}
+    };
+
+    for (int frame = 0; frame < 5; frame++)
+    {
+        // Atualiza os LEDs conforme o frame atual.
+        for (int i = 0; i < LED_COUNT; i++)
+        {
+            np_set_led(i, frames[frame][i], 0, 0); // Vermelho
+        }
+
+        np_write(); // Atualiza a matriz de LEDs.
+        sleep_ms(200); // Pausa entre os frames.
+    }
+}
+
+void handle_key_b()
+{
+    printf("Tecla B pressionada: iluminando LEDs em azul.\n");
+
+    // Acender todos os LEDs em azul com intensidade máxima.
+    for (int i = 0; i < LED_COUNT; i++)
+    {
+        np_set_led(i, 0, 0, 255); // Azul.
+    }
+
+    np_write(); // Atualiza a matriz de LEDs.
+    sleep_ms(500); // Mantém a iluminação por 500ms.
+}
+
