@@ -38,6 +38,8 @@ void play_buzzer(uint freq, uint duration_ms);
 void draw_V(void); // Protótipo da função draw_V
 void fill_color(uint8_t r, uint8_t g, uint8_t b);
 void draw_snake();
+void draw_checkerboard_pattern(int r1, int g1, int b1, int r2, int g2, int b2);
+void animate_checkerboard_pattern(int delay_ms);
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -78,8 +80,7 @@ int main()
 
             case '0':
                 printf("Tecla pressionada: %c\n", key);
-                np_write();
-                sleep_ms(200);
+                animate_checkerboard_pattern(200); // Animação fluida com atraso de 200 ms
                 break;
 
             case '1':
@@ -135,7 +136,8 @@ int main()
                 break;
 
             case 'A':
-                // Implementar função correspondente
+                np_clear();
+                np_write();
                 break;
 
             case 'B':
@@ -349,4 +351,66 @@ void draw_snake() {
         np_clear();
         np_write();
     }
+}
+
+//Desenha um padrão nos LEDs com duas cores alternadas.
+void draw_checkerboard_pattern(int r1, int g1, int b1, int r2, int g2, int b2) {
+    np_clear(); 
+    for (int i = 0; i < LED_COUNT; i++) {
+        if (i >= 0 && i <= 4)  
+            np_set_led(i, r1, g1, b1);
+        else if (i >= 10 && i <= 14)
+            np_set_led(i, r2, g2, b2);
+        else if (i >= 20 && i <= 24) 
+            np_set_led(i, r2, g2, b2);
+        else
+            np_set_led(i, 0, 0, 0);
+    }
+    np_write();
+}
+
+
+//A função faz a animação entre dois padrões de cores, após isso, aplica duas cores sólidas
+void animate_checkerboard_pattern(int delay_ms) 
+{
+    for (int i = 0; i < 4; i++)
+    {  
+        if (i % 2 == 0) 
+        {
+            draw_checkerboard_pattern(255, 0, 255, 0, 255, 255); // Padrão 1
+        } else 
+        {
+            draw_checkerboard_pattern(0, 255, 255, 255, 0, 255); // Padrão 2
+        }
+        sleep_ms(delay_ms);
+    }
+
+    np_clear();
+    //matriz totalmente preenchida
+    for(int i = 0; i < LED_COUNT; i++)
+    {
+        np_set_led(i, 0, 255, 255);
+    }
+    np_write();
+    sleep_ms(delay_ms);
+
+    for(int i = 0; i < LED_COUNT; i++)
+    {
+        np_set_led(i, 255, 0, 255);
+    }
+    np_write();
+    sleep_ms(delay_ms);
+
+    for(int i = 0; i < LED_COUNT; i++)
+    {
+        if(i == 6 || i == 7 || i == 8 || i == 11 || i == 12 || i == 13 || i == 16 || i == 17 || i == 18)
+        np_set_led(i, 0, 255, 255);
+        else
+            np_set_led(i, 255, 0, 255);
+    }
+    np_write();
+    sleep_ms(delay_ms + 1600);
+
+    np_clear();
+    np_write();
 }
