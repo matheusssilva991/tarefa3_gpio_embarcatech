@@ -144,7 +144,7 @@ Membros da equipe de desenvolvimento do projeto:
 
 ## 📝 Licença
 
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a Licença MIT - veja para mais detalhes.
 
 MIT License
 
