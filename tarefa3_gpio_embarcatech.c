@@ -568,21 +568,21 @@ void animate_b()
 {
     // Frames da animação para a letra "B".
     uint8_t frames[5][25] = {
-        // Primeiro frame
+        // Primeiro frame (apenas a barra vertical esquerda)
+        {255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0},
+
+        // Segundo frame (barra superior e meio adicionados)
         {255, 255, 255, 255, 255,
          255, 0, 0, 0, 255,
          255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255},
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0},
 
-        // Segundo frame (parte intermediária)
-        {255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255,
-         255, 0, 0, 0, 255,
-         255, 255, 255, 255, 255},
-
-        // Terceiro frame (parte final do "B")
+        // Terceiro frame (completa a barra inferior)
         {255, 255, 255, 255, 255,
          255, 0, 0, 0, 255,
          255, 255, 255, 255, 255,
