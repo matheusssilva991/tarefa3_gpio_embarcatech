@@ -142,7 +142,9 @@ int main()
                 break;
 
             case 'D':
-                // Implementar função correspondente
+                    draw_heart();  // Chama a função para desenhar o coração
+                    np_write();    // Escreve os LEDs na matriz
+                    sleep_ms(200); // Atraso para evitar múltiplos acionamentos
                 break;
 
             case '#':
@@ -561,5 +563,35 @@ void draw_snake() {
 
         np_clear();
         np_write();
+    }
+}
+
+void draw_heart() {
+    // Define os LEDs para desenhar um coração em uma matriz 5x5
+    // A matriz de LEDs é um quadrado de 5x5, onde cada posição tem um LED correspondente.
+    // Vamos acender os LEDs para formar um coração.
+
+    // Define a sequência de LEDs para o coração
+    uint8_t heart_pattern[5][5] = {
+        {0, 1, 1, 1, 0},  // Linha 1
+        {1, 1, 1, 1, 1},  // Linha 2
+        {1, 1, 1, 1, 1},  // Linha 3
+        {0, 1, 1, 1, 0},  // Linha 4
+        {0, 0, 1, 0, 0}   // Linha 5
+    };
+
+    // Acende os LEDs de acordo com o padrão do coração
+    for (int row = 0; row < 5; row++) {
+        for (int col = 0; col < 5; col++) {
+            if (heart_pattern[row][col] == 1) {
+                // Definir a cor dos LEDs como vermelho para formar o coração
+                np_set_led(row * 5 + col, 255, 0, 0);  // Cor vermelha
+            } else {
+                // Desliga os LEDs onde não faz parte do coração
+                np_set_led(row * 5 + col, 0, 0, 0);  // Cor apagada
+            }
+        }
+        np_write();  // Atualiza a matriz de LEDs
+        sleep_ms(200);  // Atraso para criar a animação
     }
 }
