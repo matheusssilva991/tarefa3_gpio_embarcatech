@@ -85,6 +85,7 @@ int main()
             case '1':
                 printf("Tecla pressionada: %c\n", key);
                 animate_subgrupo3(); // Executa animação da palavra "Subgrupo3".
+                sleep_ms(200); 
                 break;
 
             case '2':
