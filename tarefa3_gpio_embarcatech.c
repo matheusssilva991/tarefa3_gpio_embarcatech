@@ -42,6 +42,7 @@ void draw_checkerboard_pattern(int r1, int g1, int b1, int r2, int g2, int b2);
 void animate_checkerboard_pattern(int delay_ms);
 void animate_subgrupo3();
 void draw_heart_animation();
+void draw_star_animation();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -106,7 +107,10 @@ int main()
 
             case '3':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_star_animation();
+
+                np_clear();
+                np_write();
                 break;
 
             case '4':
@@ -507,6 +511,8 @@ void draw_heart_animation()
                     np_set_led(row * 5 + col, 0, 0, 0); // Cor apagada
                 }
             }
+            np_write();    // Atualiza a matriz de LEDs
+            sleep_ms(200); // Atraso entre os quadros
         }
         np_write();            // Atualiza a matriz de LEDs
         sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
@@ -605,5 +611,64 @@ void animate_subgrupo3()
 
         np_write();    // Atualiza a matriz de LEDs.
         sleep_ms(500); // Pausa de 500ms entre os frames.
+    }
+}
+
+void draw_star_animation()
+{
+
+    uint8_t star_patterns[5][5][5] = {
+        {// Frame 1 (estrela pequena)
+         {0, 0, 1, 0, 0},
+         {0, 1, 0, 1, 0},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}},
+        {// Frame 2 (estrela média)
+         {0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {0, 1, 1, 1, 0}},
+        {// Frame 3 (estrela grande)
+         {1, 1, 1, 1, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 1}},
+        {// Frame 4 (estrela média)
+         {0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {0, 1, 1, 1, 0}},
+        {// Frame 5 (estrela pequena)
+         {0, 0, 1, 0, 0},
+         {0, 1, 0, 1, 0},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}}};
+
+    for (int frame = 0; frame < 5; frame++)
+    {
+
+        for (int row = 0; row < 5; row++)
+        {
+            for (int col = 0; col < 5; col++)
+            {
+                if (star_patterns[frame][row][col] == 1)
+                {
+
+                    np_set_led(row * 5 + col, 0, 255, 0);
+                }
+                else
+                {
+
+                    np_set_led(row * 5 + col, 0, 0, 0);
+                }
+            }
+        }
+        np_write();
+        sleep_ms(200);
     }
 }
