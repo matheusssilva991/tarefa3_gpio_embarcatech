@@ -123,7 +123,11 @@ int main()
 
             case '5':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_heart_animation(); // Chama a função para desenhar o coração
+                np_write();             // Escreve os LEDs na matriz
+
+                np_clear();
+                np_write();
                 break;
 
             case '6':
@@ -133,11 +137,6 @@ int main()
 
             case '7':
                 printf("Tecla pressionada: %c\n", key);
-                draw_heart_animation(); // Chama a função para desenhar o coração
-                np_write();             // Escreve os LEDs na matriz
-
-                np_clear();
-                np_write();
                 break;
 
             case '8':
