@@ -43,6 +43,7 @@ void animate_checkerboard_pattern(int delay_ms);
 void animate_subgrupo3();
 void draw_heart_animation();
 void draw_star_animation();
+void draw_message(int message[LED_COUNT], uint8_t r, uint8_t g, uint8_t b);
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -55,8 +56,15 @@ char keypad[4][4] = {{'1', '2', '3', 'A'},
                      {'4', '5', '6', 'B'},
                      {'7', '8', '9', 'C'},
                      {'*', '0', '#', 'D'}};
+int congratulation_message = {
+    {255, 0, 255, 255, 255, 255, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 0, 255, 255, 255, 255},
+    {0, 255, 255, 255, 0, 255, 0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 255, 0, 255, 0, 0, 0, 0, 255, 0},
+    {0, 0, 255, 0, 0, 0, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255, 0},
+    {255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 255, 0, 0},
+    {255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 255, 0, 0}}
 
-int main()
+int
+main()
 {
     char key;
 
@@ -670,4 +678,12 @@ void draw_star_animation()
         np_write();
         sleep_ms(200);
     }
+}
+void draw_message(int message[LED_COUNT], uint8_t r, uint8_t g, uint8_t b)
+{
+    for (int i = 0; i < LED_COUNT; i++)
+    {
+        np_set_led(i, r, g, b);
+    }
+    np_write();
 }
