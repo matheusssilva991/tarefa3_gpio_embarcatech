@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
@@ -25,6 +28,17 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 #define RGB_MAX 255
 #define PIXEL_DELAY 200
 
+// Frequências das notas musicais
+#define C4 261
+#define D4 294
+#define E4 329
+#define F4 349
+#define G4 391
+#define A4 440
+#define B4 466
+#define C5 523
+#define D5 587
+
 // Protótipos das funções.
 void init_matrix_pins();
 char get_pressed_key();
@@ -42,6 +56,7 @@ void draw_checkerboard_pattern(int r1, int g1, int b1, int r2, int g2, int b2);
 void animate_checkerboard_pattern(int delay_ms);
 void animate_subgrupo3();
 void draw_heart_animation();
+void animate_tecla6();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -124,6 +139,7 @@ int main()
 
             case '6':
                 printf("Tecla pressionada: %c\n", key);
+                animate_tecla6()
                 sleep_ms(200);
                 break;
 
@@ -606,4 +622,138 @@ void animate_subgrupo3()
         np_write();    // Atualiza a matriz de LEDs.
         sleep_ms(500); // Pausa de 500ms entre os frames.
     }
+}
+void animate_tecla6()
+//vetor para criar imagem na matriz de led - 1
+double desenho_oi_tecla6[25] =   {0.5, 0.5, 0.5, 0.0, 0.5,
+                        0.5, 0.0, 0.5, 0.0, 0.5, 
+                        0.5, 0.0, 0.5, 0.0, 0.5,
+                        0.5, 0.0, 0.5, 0.0, 0.5,
+                        0.5, 0.5, 0.5, 0.0, 0.5};
+
+//vetor para criar imagem na matriz de led - 2
+double desenho_cr_tecla6[25] =   {0.0, 0.5, 0.0, 0.0, 0.0,
+                        0.0, 0.5, 0.0, 0.5, 0.0, 
+                        0.0, 0.0, 0.0, 0.0, 0.0,
+                        0.5, 0.0, 0.0, 0.0, 0.5,
+                        0.0, 0.5, 0.5, 0.5, 0.0};
+
+//vetor para criar imagem na matriz de led - 3
+double desenho_c_tecla6[25] =   {0.0, 0.5, 0.0, 0.5, 0.0,
+                        0.5, 0.5, 0.5, 0.5, 0.5, 
+                        0.5, 0.5, 0.5, 0.5, 0.5,
+                        0.0, 0.5, 0.5, 0.5, 0.0,
+                        0.0, 0.0, 0.5, 0.0, 0.0};
+
+//vetor para criar imagem na matriz de led - 4
+double desenho_cs_tecla6[25] =   {0.0, 0.0, 0.5, 0.0, 0.0,
+                        0.0, 0.5, 0.5, 0.5, 0.0, 
+                        0.5, 0.5, 0.5, 0.5, 0.5,
+                        0.5, 0.0, 0.0, 0.0, 0.5,
+                        0.5, 0.5, 0.5, 0.5, 0.5};
+
+//vetor para criar imagem na matriz de led - 5
+double desenho_a_tecla6[25] =   {0.0, 0.0, 0.5, 0.0, 0.0,
+                        0.0, 0.5, 0.5, 0.5, 0.0, 
+                        1.0, 0.5, 0.5, 0.5, 0.5,
+                        0.0, 0.5, 0.5, 0.5, 0.0,
+                        0.0, 0.0, 0.5, 0.0, 0.0};
+
+uint32_t matrix_rgb(double b, double r, double g)
+{
+  unsigned char R, G, B;
+  R = r * 255;
+  G = g * 255;
+  B = b * 255;
+  return (G << 24) | (R << 16) | (B << 8);
+}
+
+void desenho_pio(double *desenho, uint32_t valor_led, PIO pio, uint sm, double r, double g, double b){
+
+    for (int16_t i = 0; i < NUM_PIXELS; i++) {
+      
+        valor_led = matrix_rgb(desenho[24-i]*r, desenho[24-i]*g, desenho[24-i]*b);
+        pio_sm_put_blocking(pio, sm, valor_led);
+}}
+void setup() {
+    // Inicializando o pino do buzzer
+    gpio_init(BUZZER_PIN);
+    gpio_set_dir(BUZZER_PIN, GPIO_OUT);
+}
+
+void play_note(uint32_t frequency, uint32_t duration) {
+    uint32_t half_period = 500000 / frequency;  
+    uint32_t num_cycles = frequency * duration / 1000;  
+
+    for (uint32_t i = 0; i < num_cycles; i++) {
+        gpio_put(BUZZER_PIN, 1);  
+        busy_wait_us(half_period);  
+        gpio_put(BUZZER_PIN, 0);  
+        busy_wait_us(half_period);  
+    }
+}
+void play_parabens() {
+    // Parabéns pra Você
+    play_note(G4, 500);  
+    play_note(G4, 500);  
+    play_note(A4, 1000); 
+    play_note(G4, 1000); 
+    play_note(C5, 500);  
+    play_note(B4, 1000); 
+    sleep_ms(500);       
+
+    play_note(G4, 500);  
+    play_note(G4, 500);  
+    play_note(A4, 1000); 
+    play_note(G4, 1000); 
+    play_note(D5, 500);  
+    play_note(C5, 1000); 
+}
+
+//função principal
+int main() {
+    PIO pio = pio0; 
+    bool ok;
+    uint16_t i;
+    uint32_t valor_led;
+    double r = 0.0, b = 0.0 , g = 0.0;
+    setup();
+    ok = set_sys_clock_khz(128000, false);
+
+
+    stdio_init_all();
+
+    printf("iniciando a transmissão PIO");
+    if (ok) printf("clock set to %ld\n", clock_get_hz(clk_sys));
+
+    uint offset = pio_add_program(pio, &pio_matrix_program);
+    uint sm = pio_claim_unused_sm(pio, true);
+    pio_matrix_program_init(pio, sm, offset, OUT_PIN);
+
+    gpio_init(button_0);
+    gpio_set_dir(button_0, GPIO_IN);
+    gpio_pull_up(button_0);
+
+    gpio_init(button_1);
+    gpio_set_dir(button_1, GPIO_IN);
+    gpio_pull_up(button_1);
+
+    while (true) {
+        play_parabens();
+        sleep_ms(2000); 
+        desenho_pio(desenho_oi_tecla6, valor_led, pio, sm, 1.0, 1.0, 1.0);  
+        sleep_ms(1000);
+        desenho_pio(desenho_cr_tecla6, valor_led, pio, sm, 1.0, 0.0, 0.0);  
+        sleep_ms(1000);
+        desenho_pio(desenho_c_tecla6, valor_led, pio, sm, 0.0, 1.0, 0.0);  
+        sleep_ms(1000);
+        desenho_pio(desenho_cs_tecla6, valor_led, pio, sm, 1.0, 1.0, 1.0);
+        sleep_ms(1000);
+        desenho_pio(desenho_a_tecla6, valor_led, pio, sm, 0.0, 0.0, 1.0);
+        sleep_ms(1000);
+
+    }
+
+    sleep_ms(500);
+    printf("\nfrequeência de clock %ld\r\n", clock_get_hz(clk_sys));
 }
