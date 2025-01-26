@@ -24,7 +24,6 @@ typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t" 
 #define CLK_DIV 4.0f
 #define RGB_MAX 255
 #define PIXEL_DELAY 200
-#define ANIMATION_DELAY 1000
 
 // Protótipos das funções.
 void init_matrix_pins();
@@ -35,11 +34,14 @@ void np_clear();
 void np_write();
 void init_buzzer();
 void play_buzzer(uint freq, uint duration_ms);
-void draw_V(void); // Protótipo da função draw_V
+void draw_up(uint8_t r, uint8_t g, uint8_t b);
+void draw_raimbow_up();
 void fill_color(uint8_t r, uint8_t g, uint8_t b);
 void draw_snake();
 void draw_checkerboard_pattern(int r1, int g1, int b1, int r2, int g2, int b2);
 void animate_checkerboard_pattern(int delay_ms);
+void animate_subgrupo3();
+void draw_heart_animation();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -81,12 +83,17 @@ int main()
             case '0':
                 printf("Tecla pressionada: %c\n", key);
                 animate_checkerboard_pattern(200); // Animação fluida com atraso de 200 ms
+
+                np_clear();
+                np_write();
                 break;
 
             case '1':
                 printf("Tecla pressionada: %c\n", key);
                 animate_subgrupo3(); // Executa animação da palavra "Subgrupo3".
-                sleep_ms(200);
+
+                np_clear();
+                np_write();
                 break;
 
             case '2':
@@ -95,7 +102,6 @@ int main()
 
                 np_clear();
                 np_write();
-                sleep_ms(ANIMATION_DELAY);
                 break;
 
             case '3':
@@ -105,11 +111,10 @@ int main()
 
             case '4':
                 printf("Tecla pressionada:4 %c\n", key);
-                draw_V();
+                draw_raimbow_up();
 
                 np_clear();
                 np_write();
-                sleep_ms(ANIMATION_DELAY);
                 break;
 
             case '5':
@@ -121,9 +126,14 @@ int main()
                 printf("Tecla pressionada: %c\n", key);
                 sleep_ms(200);
                 break;
+
             case '7':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                draw_heart_animation(); // Chama a função para desenhar o coração
+                np_write();             // Escreve os LEDs na matriz
+
+                np_clear();
+                np_write();
                 break;
 
             case '8':
@@ -137,22 +147,24 @@ int main()
                 break;
 
             case 'A':
+                printf("Tecla pressionada: %c\n", key);
                 np_clear();
                 np_write();
                 break;
 
             case 'B':
-                handle_key_b(); // Aciona a funcionalidade da tecla B.
+                printf("Tecla pressionada: %c\n", key);
+                fill_color(0, 0, RGB_MAX);
                 break;
 
             case 'C':
+                printf("Tecla pressionada: %c\n", key);
                 fill_color(RGB_MAX * 0.8, 0, 0);
                 break;
 
             case 'D':
-                draw_heart_animation(); // Chama a função para desenhar o coração
-                np_write();             // Escreve os LEDs na matriz
-                sleep_ms(200);          // Atraso para evitar múltiplos acionamentos
+                printf("Tecla pressionada: %c\n", key);
+                fill_color(0, RGB_MAX * 0.5, 0);
                 break;
 
             case '#':
@@ -161,7 +173,7 @@ int main()
                 break;
 
             case '*':
-                // Implementar função correspondente
+                reset_usb_boot(0, 0); // Reseta o dispositivo para o modo de inicialização USB
                 break;
 
             default:
@@ -323,20 +335,34 @@ void fill_color(uint8_t r, uint8_t g, uint8_t b)
     np_write();
 }
 
-void draw_V()
+// Preenche a matriz de LEDs de um a um, de baixo para cima e com uma determinada cor.
+void draw_up(uint8_t r, uint8_t g, uint8_t b)
 {
-    np_clear(); // Limpa a matriz antes de acender os LEDs
-    np_write(); // Envia os dados para o display
+    np_clear();
+    np_write();
 
-    // Acende os LEDs em azul, de cima para baixo
     for (int i = 0; i < LED_COUNT; i++)
-    {                             // Linha 1
-        np_set_led(i, 0, 0, 255); // Acende o LED em azul
-        np_write();               // Envia os dados para o display
-        sleep_ms(PIXEL_DELAY);    // Aguarda 100 ms antes de acender o próximo LED
+    {
+        np_set_led(i, r, g, b);
+        np_write();
+        sleep_ms(PIXEL_DELAY);
     }
 }
 
+// Preenche a matriz de LEDs de um a um, de cima para baixo e com várias cores.
+void draw_raimbow_up()
+{
+    np_clear();
+    np_write();
+
+    draw_up(RGB_MAX, 0, 0);       // Vermelho
+    draw_up(RGB_MAX, RGB_MAX, 0); // Amarelo
+    draw_up(0, RGB_MAX, 0);       // Verde
+    draw_up(0, 0, RGB_MAX);       // Azul
+    draw_up(RGB_MAX, 0, RGB_MAX); // Magenta
+}
+
+// Desenha uma animação de uma cobra passando pelos LEDs.
 void draw_snake()
 {
     int len_snake = 3;
@@ -424,230 +450,160 @@ void animate_checkerboard_pattern(int delay_ms)
 
     np_clear();
     np_write();
+}
 
-    void draw_heart_animation()
+// Função para desenhar a animação de um coração
+void draw_heart_animation()
+{
+    // Define os 5 padrões de animação do coração
+    uint8_t heart_patterns[5][5][5] = {
+        {// Frame 1 (pequeno)
+         {0, 0, 1, 0, 0},
+         {0, 1, 0, 1, 0},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}},
+        {// Frame 2 (maior)
+         {0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}},
+        {// Frame 3 (cheio)
+         {0, 1, 1, 1, 0},
+         {1, 1, 1, 1, 1},
+         {1, 1, 1, 1, 1},
+         {0, 1, 1, 1, 0},
+         {0, 0, 1, 0, 0}},
+        {// Frame 4 (maior)
+         {0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}},
+        {// Frame 5 (pequeno)
+         {0, 0, 1, 0, 0},
+         {0, 1, 0, 1, 0},
+         {1, 0, 0, 0, 1},
+         {0, 1, 0, 1, 0},
+         {0, 0, 1, 0, 0}}};
+
+    // Executa os 5 quadros da animação
+    for (int frame = 0; frame < 5; frame++)
     {
-        // Define os 5 padrões de animação do coração
-        uint8_t heart_patterns[5][5][5] = {
-            {// Frame 1 (pequeno)
-             {0, 0, 1, 0, 0},
-             {0, 1, 0, 1, 0},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}},
-            {// Frame 2 (maior)
-             {0, 1, 1, 1, 0},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}},
-            {// Frame 3 (cheio)
-             {0, 1, 1, 1, 0},
-             {1, 1, 1, 1, 1},
-             {1, 1, 1, 1, 1},
-             {0, 1, 1, 1, 0},
-             {0, 0, 1, 0, 0}},
-            {// Frame 4 (maior)
-             {0, 1, 1, 1, 0},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}},
-            {// Frame 5 (pequeno)
-             {0, 0, 1, 0, 0},
-             {0, 1, 0, 1, 0},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}}};
-
-        // Executa os 5 quadros da animação
-        for (int frame = 0; frame < 5; frame++)
+        // Percorre cada linha e coluna do padrão atual
+        for (int row = 0; row < 5; row++)
         {
-            // Percorre cada linha e coluna do padrão atual
-            for (int row = 0; row < 5; row++)
+            for (int col = 0; col < 5; col++)
             {
-                for (int col = 0; col < 5; col++)
+                if (heart_patterns[frame][row][col] == 1)
                 {
-                    if (heart_patterns[frame][row][col] == 1)
-                    {
-                        // Acende o LED na cor vermelha
-                        np_set_led(row * 5 + col, 255, 0, 0); // Cor vermelha
-                    }
-                    else
-                    {
-                        // Desliga o LED
-                        np_set_led(row * 5 + col, 0, 0, 0); // Cor apagada
-                    }
+                    // Acende o LED na cor vermelha
+                    np_set_led(row * 5 + col, 255, 0, 0); // Cor vermelha
+                }
+                else
+                {
+                    // Desliga o LED
+                    np_set_led(row * 5 + col, 0, 0, 0); // Cor apagada
                 }
             }
-            np_write();    // Atualiza a matriz de LEDs
-            sleep_ms(200); // Atraso entre os quadros
         }
+        np_write();            // Atualiza a matriz de LEDs
+        sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
     }
+}
 
-    void animate_subgrupo3()
+// Função para animar a palavra "SUBGRUPO3" na matriz de LEDs.
+void animate_subgrupo3()
+{
+    // Frames da animação para a palavra "SUBGRUPO3".
+    uint8_t frames[11][25] = {
+        // Frame 1: Todos os LEDs acesos
+        {255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 2: Letra "S"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 3: Letra "U"
+        {255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 4: Letra "B"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 5: Letra "G"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 0, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 6: Letra "R"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 255, 0, 255,
+         255, 0, 0, 255, 255},
+
+        // Frame 7: Letra "U"
+        {255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 8: Letra "P"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         255, 0, 0, 0, 0,
+         255, 0, 0, 0, 0},
+
+        // Frame 9: Letra "O"
+        {255, 255, 255, 255, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 10: Número "3"
+        {255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255,
+         0, 0, 0, 0, 255,
+         255, 255, 255, 255, 255},
+
+        // Frame 11: Todos os LEDs apagados
+        {0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0}};
+
+    for (int frame = 0; frame < 11; frame++)
     {
-        // Frames da animação para a palavra "SUBGRUPO3".
-        uint8_t frames[11][25] = {
-            // Frame 1: Todos os LEDs acesos
-            {255, 255, 255, 255, 255,
-             255, 255, 255, 255, 255,
-             255, 255, 255, 255, 255,
-             255, 255, 255, 255, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 2: Letra "S"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 0,
-             255, 255, 255, 255, 255,
-             0, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 3: Letra "U"
-            {255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 4: Letra "B"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 5: Letra "G"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 0,
-             255, 0, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 6: Letra "R"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255,
-             255, 0, 255, 0, 255,
-             255, 0, 0, 255, 255},
-
-            // Frame 7: Letra "U"
-            {255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 8: Letra "P"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255,
-             255, 0, 0, 0, 0,
-             255, 0, 0, 0, 0},
-
-            // Frame 9: Letra "O"
-            {255, 255, 255, 255, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 10: Número "3"
-            {255, 255, 255, 255, 255,
-             0, 0, 0, 0, 255,
-             255, 255, 255, 255, 255,
-             0, 0, 0, 0, 255,
-             255, 255, 255, 255, 255},
-
-            // Frame 11: Todos os LEDs apagados
-            {0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0}};
-
-        for (int frame = 0; frame < 11; frame++)
-        {
-            // Atualiza os LEDs conforme o frame atual.
-            for (int i = 0; i < LED_COUNT; i++)
-            {
-                np_set_led(i, frames[frame][i], 0, 0); // Vermelho
-            }
-
-            np_write();    // Atualiza a matriz de LEDs.
-            sleep_ms(500); // Pausa de 500ms entre os frames.
-        }
-    }
-
-    void draw_star_animation()
-    {
-
-        uint8_t star_patterns[5][5][5] = {
-            {// Frame 1 (estrela pequena)
-             {0, 0, 1, 0, 0},
-             {0, 1, 0, 1, 0},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}},
-            {// Frame 2 (estrela média)
-             {0, 1, 1, 1, 0},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {0, 1, 1, 1, 0}},
-            {// Frame 3 (estrela grande)
-             {1, 1, 1, 1, 1},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {1, 1, 1, 1, 1}},
-            {// Frame 4 (estrela média)
-             {0, 1, 1, 1, 0},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {1, 0, 0, 0, 1},
-             {0, 1, 1, 1, 0}},
-            {// Frame 5 (estrela pequena)
-             {0, 0, 1, 0, 0},
-             {0, 1, 0, 1, 0},
-             {1, 0, 0, 0, 1},
-             {0, 1, 0, 1, 0},
-             {0, 0, 1, 0, 0}}};
-
-        for (int frame = 0; frame < 5; frame++)
-        {
-
-            for (int row = 0; row < 5; row++)
-            {
-                for (int col = 0; col < 5; col++)
-                {
-                    if (star_patterns[frame][row][col] == 1)
-                    {
-
-                        np_set_led(row * 5 + col, 0, 255, 0);
-                    }
-                    else
-                    {
-
-                        np_set_led(row * 5 + col, 0, 0, 0);
-                    }
-                }
-            }
-            np_write();
-            sleep_ms(200);
-        }
-    }
-
-    void handle_key_b()
-    {
-        printf("Tecla B pressionada: iluminando LEDs em azul.\n");
-
-        // Acender todos os LEDs em azul com intensidade máxima.
+        // Atualiza os LEDs conforme o frame atual.
         for (int i = 0; i < LED_COUNT; i++)
         {
-            np_set_led(i, 0, 0, 255); // Azul.
+            np_set_led(i, frames[frame][i], 0, 0); // Vermelho
         }
 
         np_write();    // Atualiza a matriz de LEDs.
-        sleep_ms(500); // Mantém a iluminação por 500ms.
+        sleep_ms(500); // Pausa de 500ms entre os frames.
     }
+}
