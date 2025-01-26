@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
 #include "hardware/pwm.h"
 #include "pico/bootrom.h"
+
 
 // Biblioteca gerada pelo arquivo .pio durante compilação.
 #include "matriz_led.pio.h"
@@ -132,6 +136,9 @@ int main()
 
             case '6':
                 printf("Tecla pressionada: %c\n", key);
+                    draw_parabens_animation(); // Chama a animação de "Parabéns"
+                    np_clear();                // Limpa os LEDs
+                    np_write();  
                 sleep_ms(200);
                 break;
 
@@ -669,5 +676,100 @@ void draw_star_animation()
         }
         np_write();
         sleep_ms(200);
+    }
+}
+
+void draw_parabens_animation()
+{
+    // Define os padrões de LEDs para a palavra "Parabéns".
+    uint8_t paraben_patterns[9][5][5] = {
+        // Frame 1: "P"
+        {{1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 0},
+         {1, 0, 0, 0, 0}},
+        
+        // Frame 2: "A"
+        {{0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1}},
+        
+        // Frame 3: "R"
+        {{1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 0},
+         {1, 0, 1, 0, 0},
+         {1, 0, 0, 0, 0}},
+        
+        // Frame 4: "A" (Repetido)
+        {{0, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 1},
+         {1, 0, 0, 0, 1},
+         {1, 0, 0, 0, 1}},
+        
+        // Frame 5: "B"
+        {{1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 1},
+         {1, 1, 1, 1, 0}},
+        
+        // Frame 6: "E"
+        {{1, 1, 1, 1, 1},
+         {1, 0, 0, 0, 0},
+         {1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 0},
+         {1, 1, 1, 1, 1}},
+        
+        // Frame 7: "N"
+        {{1, 0, 0, 0, 1},
+         {1, 1, 0, 0, 1},
+         {1, 1, 1, 0, 1},
+         {1, 1, 1, 1, 1},
+         {1, 1, 1, 1, 1}},
+        
+        // Frame 8: "S"
+        {{1, 1, 1, 1, 0},
+         {1, 0, 0, 0, 0},
+         {1, 1, 1, 1, 1},
+         {0, 0, 0, 0, 1},
+         {1, 1, 1, 1, 0}},
+        
+        // Frame 9: "Feliz Aniversário"
+        {{0, 0, 0, 0, 0},
+         {0, 0, 0, 0, 0},
+         {0, 0, 0, 0, 0},
+         {0, 0, 0, 0, 0},
+         {0, 0, 0, 0, 0}}
+    };
+
+    // Exibe os frames da animação de "Parabéns"
+    for (int frame = 0; frame < 9; frame++)
+    {
+        // Percorre cada linha e coluna do padrão atual
+        for (int row = 0; row < 5; row++)
+        {
+            for (int col = 0; col < 5; col++)
+            {
+                if (paraben_patterns[frame][row][col] == 1)
+                {
+                    // Acende o LED na cor vermelha
+                    np_set_led(row * 5 + col, 255, 0, 0); // Cor vermelha
+                }
+                else
+                {
+                    // Desliga o LED
+                    np_set_led(row * 5 + col, 0, 0, 0); // Cor apagada
+                }
+            }
+            np_write();    // Atualiza a matriz de LEDs
+            sleep_ms(200); // Atraso entre os quadros
+        }
+        np_write();            // Atualiza a matriz de LEDs
+        sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
     }
 }
