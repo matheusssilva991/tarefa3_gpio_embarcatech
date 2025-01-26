@@ -47,6 +47,7 @@ void animate_checkerboard_pattern(int delay_ms);
 void animate_subgrupo3();
 void draw_heart_animation();
 void draw_star_animation();
+void draw_birthday_animation();
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -136,10 +137,10 @@ int main()
 
             case '6':
                 printf("Tecla pressionada: %c\n", key);
-                    draw_parabens_animation(); // Chama a animação de "Parabéns"
-                    np_clear();                // Limpa os LEDs
-                    np_write();  
-                sleep_ms(200);
+                draw_birthday_animation(); // Chama a animação de "Parabéns"
+
+                np_clear();                // Limpa os LEDs
+                np_write();
                 break;
 
             case '7':
@@ -679,7 +680,7 @@ void draw_star_animation()
     }
 }
 
-void draw_parabens_animation()
+void draw_birthday_animation()
 {
     // Define os padrões de LEDs para a palavra "Parabéns".
     uint8_t paraben_patterns[9][5][5] = {
@@ -689,56 +690,56 @@ void draw_parabens_animation()
          {1, 1, 1, 1, 0},
          {1, 0, 0, 0, 0},
          {1, 0, 0, 0, 0}},
-        
+
         // Frame 2: "A"
         {{0, 1, 1, 1, 0},
          {1, 0, 0, 0, 1},
          {1, 1, 1, 1, 1},
          {1, 0, 0, 0, 1},
          {1, 0, 0, 0, 1}},
-        
+
         // Frame 3: "R"
         {{1, 1, 1, 1, 0},
          {1, 0, 0, 0, 1},
          {1, 1, 1, 1, 0},
          {1, 0, 1, 0, 0},
          {1, 0, 0, 0, 0}},
-        
+
         // Frame 4: "A" (Repetido)
         {{0, 1, 1, 1, 0},
          {1, 0, 0, 0, 1},
          {1, 1, 1, 1, 1},
          {1, 0, 0, 0, 1},
          {1, 0, 0, 0, 1}},
-        
+
         // Frame 5: "B"
         {{1, 1, 1, 1, 0},
          {1, 0, 0, 0, 1},
          {1, 1, 1, 1, 0},
          {1, 0, 0, 0, 1},
          {1, 1, 1, 1, 0}},
-        
+
         // Frame 6: "E"
         {{1, 1, 1, 1, 1},
          {1, 0, 0, 0, 0},
          {1, 1, 1, 1, 0},
          {1, 0, 0, 0, 0},
          {1, 1, 1, 1, 1}},
-        
+
         // Frame 7: "N"
         {{1, 0, 0, 0, 1},
          {1, 1, 0, 0, 1},
          {1, 1, 1, 0, 1},
          {1, 1, 1, 1, 1},
          {1, 1, 1, 1, 1}},
-        
+
         // Frame 8: "S"
         {{1, 1, 1, 1, 0},
          {1, 0, 0, 0, 0},
          {1, 1, 1, 1, 1},
          {0, 0, 0, 0, 1},
          {1, 1, 1, 1, 0}},
-        
+
         // Frame 9: "Feliz Aniversário"
         {{0, 0, 0, 0, 0},
          {0, 0, 0, 0, 0},
@@ -767,9 +768,7 @@ void draw_parabens_animation()
                 }
             }
             np_write();    // Atualiza a matriz de LEDs
-            sleep_ms(200); // Atraso entre os quadros
+            sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
         }
-        np_write();            // Atualiza a matriz de LEDs
-        sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
     }
 }
