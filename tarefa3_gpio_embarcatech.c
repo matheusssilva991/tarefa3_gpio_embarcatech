@@ -43,6 +43,7 @@ void animate_checkerboard_pattern(int delay_ms);
 void animate_subgrupo3();
 void draw_heart_animation();
 void draw_star_animation();
+void draw_message(int message[LED_COUNT], uint8_t r, uint8_t g, uint8_t b);
 
 // Variáveis globais
 npLED_t leds[LED_COUNT]; // Declaração do buffer de pixels que formam a matriz.
@@ -55,6 +56,13 @@ char keypad[4][4] = {{'1', '2', '3', 'A'},
                      {'4', '5', '6', 'B'},
                      {'7', '8', '9', 'C'},
                      {'*', '0', '#', 'D'}};
+
+int congratulation_message[5][LED_COUNT] = {
+    {255, 0, 255, 255, 255, 255, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 0, 255, 0, 255, 255, 0, 255, 255, 255},
+    {0, 255, 255, 255, 0, 255, 0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 255, 0, 255, 0, 0, 0, 0, 255, 0},
+    {0, 0, 255, 0, 0, 0, 255, 255, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255, 0},
+    {255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 255, 0, 0},
+    {0, 0, 255, 0, 0, 0, 255, 255, 255, 0, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 0, 0, 255, 0, 0}};
 
 int main()
 {
@@ -132,7 +140,34 @@ int main()
 
             case '6':
                 printf("Tecla pressionada: %c\n", key);
-                sleep_ms(200);
+                
+                    play_buzzer(391, 500);  
+                    play_buzzer(391, 500);  
+                    play_buzzer(440, 1000); 
+                    play_buzzer(391, 1000); 
+                    play_buzzer(523, 500);  
+                    play_buzzer(466, 1000); 
+                    sleep_ms(500);       
+
+                    play_buzzer(391, 500);  
+                    play_buzzer(391, 500);  
+                    play_buzzer(440, 1000); 
+                    play_buzzer(391, 1000); 
+                    play_buzzer(587, 500);  
+                    play_buzzer(523, 1000); 
+                draw_message(congratulation_message[0], 0,0,255);
+                sleep_ms(1000);
+                draw_message(congratulation_message[1], 255,0,127);
+                sleep_ms(1000);
+                draw_message(congratulation_message[2], 255,0,0);
+                sleep_ms(1000);
+                draw_message(congratulation_message[3], 165,42,42);
+                sleep_ms(1000);
+                draw_message(congratulation_message[4], 0,255,0);
+                sleep_ms(1000);
+
+                np_clear();
+                np_write();
                 break;
 
             case '7':
@@ -670,4 +705,16 @@ void draw_star_animation()
         np_write();
         sleep_ms(200);
     }
+}
+void draw_message(int message[LED_COUNT], uint8_t r, uint8_t g, uint8_t b)
+{
+    np_clear();
+    np_write();
+    for (int i = 0; i < LED_COUNT; i++)
+    {
+        if (message[i]!=0)
+
+        np_set_led(i, r, g, b);
+    }
+    np_write();
 }
