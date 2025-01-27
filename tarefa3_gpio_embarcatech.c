@@ -493,65 +493,91 @@ void animate_checkerboard_pattern(int delay_ms)
 // Função para desenhar a animação de um coração
 void draw_heart_animation()
 {
-    // Define os 5 padrões de animação do coração
-    uint8_t heart_patterns[5][5][5] = {
-        {// Frame 1 (pequeno)
+    // Define os padrões de animação do coração, incluindo os novos frames (azul e branco)
+    uint8_t heart_patterns[7][5][5] = {
+        {// Frame 1 
          {0, 0, 1, 0, 0},
          {0, 1, 0, 1, 0},
          {1, 0, 0, 0, 1},
-         {0, 1, 0, 1, 0},
-         {0, 0, 1, 0, 0}},
-        {// Frame 2 (maior)
+         {1, 0, 1, 0, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 2
+         {0, 0, 1, 0, 0},
          {0, 1, 1, 1, 0},
-         {1, 0, 0, 0, 1},
-         {1, 0, 0, 0, 1},
-         {0, 1, 0, 1, 0},
-         {0, 0, 1, 0, 0}},
-        {// Frame 3 (cheio)
+         {1, 1, 0, 1, 1},
+         {1, 1, 1, 1, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 4
+         {0, 0, 1, 0, 0},
          {0, 1, 1, 1, 0},
          {1, 1, 1, 1, 1},
          {1, 1, 1, 1, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 4
+         {0, 0, 1, 0, 0},
          {0, 1, 1, 1, 0},
-         {0, 0, 1, 0, 0}},
-        {// Frame 4 (maior)
+         {1, 1, 1, 1, 1},
+         {1, 1, 1, 1, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 5 
+         {0, 0, 1, 0, 0},
          {0, 1, 1, 1, 0},
-         {1, 0, 0, 0, 1},
-         {1, 0, 0, 0, 1},
-         {0, 1, 0, 1, 0},
-         {0, 0, 1, 0, 0}},
-        {// Frame 5 (pequeno)
+         {1, 1, 1, 1, 1},
+         {1, 1, 1, 1, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 6 
+         {0, 0, 1, 0, 0},
+         {0, 1, 1, 1, 0},
+         {1, 1, 0, 1, 1},
+         {1, 1, 1, 1, 1},
+         {0, 1, 0, 1, 0}},
+        {// Frame 7 
          {0, 0, 1, 0, 0},
          {0, 1, 0, 1, 0},
          {1, 0, 0, 0, 1},
-         {0, 1, 0, 1, 0},
-         {0, 0, 1, 0, 0}}};
+         {1, 0, 1, 0, 1},
+         {0, 1, 0, 1, 0}}
+};
 
-    // Executa os 5 quadros da animação
-    for (int frame = 0; frame < 5; frame++)
+    // Executa os quadros da animação
+    for (int frame = 0; frame < 7; frame++)
     {
-        // Percorre cada linha e coluna do padrão atual
+        // Define a cor do coração para cada frame
+        int r = 0, g = 0, b = 0; // Inicializa como apagado
+        if (frame <= 2 || frame > 4) // Frames vermelho
+        {
+            r = 255;
+        }
+        else if (frame == 3) // Frame azul
+        {
+            b = 255;
+        }
+        else if (frame == 4) // Frame branco
+        {
+            r = g = b = 255;
+        }
+
+        // Desenha o padrão no grid
         for (int row = 0; row < 5; row++)
         {
             for (int col = 0; col < 5; col++)
             {
                 if (heart_patterns[frame][row][col] == 1)
                 {
-                    // Acende o LED na cor vermelha
-                    np_set_led(row * 5 + col, 255, 0, 0); // Cor vermelha
+                    np_set_led(row * 5 + col, r, g, b); // Acende na cor correspondente
                 }
                 else
                 {
-                    // Desliga o LED
-                    np_set_led(row * 5 + col, 0, 0, 0); // Cor apagada
+                    np_set_led(row * 5 + col, 0, 0, 0); // Apaga
                 }
             }
-            np_write();    // Atualiza a matriz de LEDs
-            sleep_ms(200); // Atraso entre os quadros
         }
-        np_write();            // Atualiza a matriz de LEDs
-        sleep_ms(PIXEL_DELAY); // Atraso entre os quadros
+
+        np_write();     // Atualiza os LEDs
+        sleep_ms(500);  // Atraso de 500 ms entre os quadros
     }
 }
+
 
 // Função para animar a palavra "SUBGRUPO3" na matriz de LEDs.
 void animate_subgrupo3()
