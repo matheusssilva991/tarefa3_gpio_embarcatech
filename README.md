@@ -8,6 +8,7 @@ Este projeto implementa um sistema de controle para uma matriz de LED 5x5 RGB ut
 - Cada tecla numérica (0-9) aciona uma animação diferente na matriz de LED
 - Cada animação possui no mínimo 5 frames
 - Animações customizadas com diferentes cores RGB e níveis de luminosidade
+-Link do video: [https://www.youtube.com/watch?v=rOERaXZPiCk](https://www.youtube.com/watch?v=rOERaXZPiCk)
 
 ### Controles Especiais
 - **Tecla A**: Desliga todos os LEDs
